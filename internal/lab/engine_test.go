@@ -1,6 +1,8 @@
 package lab
 
 import (
+	"fmt"
+	"sync"
 	"testing"
 	"time"
 )
@@ -36,5 +38,62 @@ func TestSummaryRecommendsInitialObservation(t *testing.T) {
 	}
 	if summary.TotalRuns != 0 {
 		t.Fatalf("TotalRuns = %d", summary.TotalRuns)
+	}
+}
+
+func TestConcurrentObservationSubmissionsPreserveTraceability(t *testing.T) {
+	engine := NewEngine()
+	const total = 24
+	start := make(chan struct{})
+	errs := make(chan error, total)
+	var wg sync.WaitGroup
+	wg.Add(total)
+
+	for index := 0; index < total/2; index++ {
+		index := index
+		go func() {
+			defer wg.Done()
+			<-start
+			_, err := engine.Submit(ObservationInput{
+				ProfileID:  "thermal-stability",
+				Values:     []float64{10, 10.1, 9.9, 10},
+				CapturedBy: fmt.Sprintf("operator-%d", index),
+			})
+			errs <- err
+		}()
+	}
+	for index := total / 2; index < total; index++ {
+		index := index
+		go func() {
+			defer wg.Done()
+			<-start
+			_, err := engine.Submit(ObservationInput{
+				ProfileID:  "thermal-stability",
+				Values:     []float64{10, 10.1, 9.9, 10},
+				CapturedBy: fmt.Sprintf("operator-%d", index),
+			})
+			errs <- err
+		}()
+	}
+
+	close(start)
+	wg.Wait()
+	for index := 0; index < total; index++ {
+		if err := <-errs; err != nil {
+			t.Fatalf("Submit() error = %v", err)
+		}
+	}
+
+	if got := engine.RunCount(); got != total {
+		t.Fatalf("RunCount() = %d, want %d", got, total)
+	}
+	records := engine.trace.ProfileRecords("thermal-stability")
+	if len(records) != total {
+		t.Fatalf("traceability records = %d, want %d", len(records), total)
+	}
+	for _, record := range records {
+		if !TraceabilityComplete(record) {
+			t.Fatalf("incomplete traceability record: %+v", record)
+		}
 	}
 }
