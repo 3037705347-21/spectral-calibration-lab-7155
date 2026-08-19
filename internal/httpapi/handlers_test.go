@@ -27,3 +27,13 @@ func TestProfileEndpointListsProfiles(t *testing.T) {
 		t.Fatalf("status = %d", recorder.Code)
 	}
 }
+
+func TestReportReturnsNotFoundForUnknownProfile(t *testing.T) {
+	server := New(lab.NewEngine())
+	req := httptest.NewRequest(http.MethodGet, "/v1/reports?profile_id=missing-profile", nil)
+	rr := httptest.NewRecorder()
+	server.Handler().ServeHTTP(rr, req)
+	if rr.Code != http.StatusNotFound {
+		t.Fatalf("status = %d body=%s", rr.Code, rr.Body.String())
+	}
+}
