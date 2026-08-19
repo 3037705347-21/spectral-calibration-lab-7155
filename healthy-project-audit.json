@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "project_path": "D:\\go\\go-lr-00014\\_source\\spectral-calibration-lab",
+  "source_fingerprint": "d124f2ef01468d8e1e1fb0cd7cd211b533cd55b844775efc520dda5e48b26e02",
+  "project_spec": {
+    "path": "D:\\go\\go-lr-00014\\_source\\spectral-calibration-lab\\.go-annotation-project.json",
+    "workflow_ids": [
+      "inspect-profiles",
+      "review-quality",
+      "submit-observation"
+    ],
+    "module_count": 3
+  },
+  "semantic": {
+    "ok": true,
+    "errors": [],
+    "main_packages": [
+      "spectralcalibrationlab/cmd/calibrationd"
+    ],
+    "reachable_packages": [
+      "spectralcalibrationlab/cmd/calibrationd",
+      "spectralcalibrationlab/internal/httpapi",
+      "spectralcalibrationlab/internal/lab"
+    ],
+    "unreachable_packages": [],
+    "duplicate_groups": [],
+    "placeholder_files": [],
+    "likely_dead_symbols": [
+      {
+        "path": "internal/lab/catalog.go",
+        "line": 42,
+        "name": "Count"
+      }
+    ],
+    "workflow_ids": [
+      "inspect-profiles",
+      "review-quality",
+      "submit-observation"
+    ],
+    "workflow_checks": [
+      "inspect-profiles",
+      "review-quality",
+      "submit-observation"
+    ]
+  },
+  "capacity": 10,
+  "production_go_files": 30,
+  "non_test_go_code_lines": 2067,
+  "excluded": {
+    "tests": 2,
+    "generated": 0,
+    "vendor_or_third_party": 0
+  },
+  "build": {
+    "command": [
+      "go",
+      "build",
+      "./..."
+    ],
+    "output": ""
+  },
+  "test": {
+    "command": [
+      "go",
+      "test",
+      "./..."
+    ],
+    "output": "?   \tspectralcalibrationlab/cmd/calibrationd\t[no test files]\nok  \tspectralcalibrationlab/internal/httpapi\t(cached)\nok  \tspectralcalibrationlab/internal/lab\t(cached)"
+  },
+  "runtime": {
+    "shape": "backend",
+    "service": {
+      "command": "go run ./cmd/calibrationd",
+      "health": {
+        "url": "http://127.0.0.1:18084/healthz",
+        "method": "GET",
+        "status": 200
+      },
+      "api": {
+        "url": "http://127.0.0.1:18084/v1/profiles",
+        "method": "GET",
+        "status": 200
+      },
+      "workflow_checks": [
+        {
+          "workflow_id": "inspect-profiles",
+          "result": {
+            "url": "http://127.0.0.1:18084/v1/profiles",
+            "method": "GET",
+            "status": 200
+          }
+        },
+        {
+          "workflow_id": "submit-observation",
+          "result": {
+            "url": "http://127.0.0.1:18084/v1/observations",
+            "method": "POST",
+            "status": 201
+          }
+        },
+        {
+          "workflow_id": "review-quality",
+          "result": {
+            "url": "http://127.0.0.1:18084/v1/reports?profile_id=thermal-stability",
+            "method": "GET",
+            "status": 200
+          }
+        }
+      ]
+    }
+  },
+  "go_version": {
+    "language": "1.26",
+    "toolchain": "go1.26.5",
+    "docker_image": "golang:1.26.5"
+  },
+  "has_frontend": false
+}
