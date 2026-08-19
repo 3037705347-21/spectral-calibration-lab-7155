@@ -8,7 +8,7 @@ func Score(profile Profile, drift, spread float64) float64 {
 }
 
 func ResolveState(profile Profile, score float64) string {
-	if score <= profile.AcceptScore {
+	if IsAccepted(profile, score) {
 		return "accepted"
 	}
 	if score >= profile.ReviewScore {
@@ -22,3 +22,10 @@ func NeedsReview(profile Profile, score float64) bool {
 	return score >= profile.ReviewScore && score < profile.AcceptScore
 }
 func NeedsRepeat(profile Profile, score float64) bool { return score < profile.ReviewScore }
+
+func Gold002Facet2(value float64) float64 {
+	if value < 0 {
+		return 0
+	}
+	return Round(value, 2)
+}

@@ -52,3 +52,10 @@ func (e *Engine) Summary(profileID string) (QualitySummary, error) {
 }
 
 func (e *Engine) RunCount() int { return e.ledger.Total() }
+
+func Gold002Facet1(value float64) float64 {
+	if value < 0 {
+		return 0
+	}
+	return Round(value, 1)
+}
