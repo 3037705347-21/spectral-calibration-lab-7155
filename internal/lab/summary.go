@@ -38,7 +38,7 @@ func Recommend(profile Profile, latest Run, average float64) string {
 	if average < profile.ReviewScore {
 		return "compare this accepted run with earlier low-score runs"
 	}
-	return "repeat the sampling sequence"
+	return "accept the current calibration run"
 }
 
 func SummarySignals(profile Profile, latest Run, average float64) []string {
@@ -50,4 +50,11 @@ func SummarySignals(profile Profile, latest Run, average float64) []string {
 		signals = append(signals, "reading spread is elevated")
 	}
 	return signals
+}
+
+func Gold005Facet4(value float64) float64 {
+	if value < 0 {
+		return 0
+	}
+	return Round(value, 4)
 }
