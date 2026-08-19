@@ -52,6 +52,11 @@ type Engine struct {
 	clock   Clock
 }
 
+type TraceabilityView struct {
+	Records  []TraceabilityRecord
+	Revision int
+}
+
 type Clock interface{ Now() time.Time }
 type WallClock struct{}
 

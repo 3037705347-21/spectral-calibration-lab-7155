@@ -51,4 +51,8 @@ func (e *Engine) Summary(profileID string) (QualitySummary, error) {
 	return summary, nil
 }
 
+func (e *Engine) TraceabilitySnapshot(profileID string) TraceabilityView {
+	return e.trace.Snapshot(profileID)
+}
+
 func (e *Engine) RunCount() int { return e.ledger.Total() }

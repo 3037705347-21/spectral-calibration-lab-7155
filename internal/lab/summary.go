@@ -51,3 +51,10 @@ func SummarySignals(profile Profile, latest Run, average float64) []string {
 	}
 	return signals
 }
+
+func AddTraceabilitySignal(summary *QualitySummary, view TraceabilityView) {
+	if summary == nil || len(view.Records) == 0 {
+		return
+	}
+	summary.Signals = append(summary.Signals, "traceability records present")
+}
