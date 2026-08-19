@@ -39,3 +39,13 @@ func ValidateObservation(input ObservationInput) error {
 	}
 	return nil
 }
+
+func MeasurementErrorMessage(err error) string {
+	if err == nil {
+		return ""
+	}
+	if IsInvalidMeasurement(err) {
+		return "one or more measurements are invalid"
+	}
+	return err.Error()
+}

@@ -10,12 +10,12 @@ func NormalizeValues(values []float64) ([]float64, error) {
 		return nil, fmt.Errorf("values must not be empty")
 	}
 	result := make([]float64, 0, len(values))
-	for _, value := range values {
+	for index, value := range values {
 		if math.IsNaN(value) || math.IsInf(value, 0) {
-			return nil, fmt.Errorf("values must be finite")
+			return nil, &InvalidMeasurementError{Index: index, Value: value, Reason: "value must be finite"}
 		}
 		if value < -1000000 || value > 1000000 {
-			return nil, fmt.Errorf("value %.4f is outside the supported range", value)
+			return nil, &InvalidMeasurementError{Index: index, Value: value, Reason: "value is outside the supported range"}
 		}
 		result = append(result, Round(value, 6))
 	}

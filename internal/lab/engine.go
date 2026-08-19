@@ -1,5 +1,7 @@
 package lab
 
+import "fmt"
+
 func NewEngine() *Engine { return NewEngineWithClock(WallClock{}) }
 
 func NewEngineWithClock(clock Clock) *Engine {
@@ -15,7 +17,7 @@ func (e *Engine) Submit(input ObservationInput) (Run, error) {
 	}
 	values, err := NormalizeValues(input.Values)
 	if err != nil {
-		return Run{}, err
+		return Run{}, fmt.Errorf("normalize observation values: %w", err)
 	}
 	if err := ValidateSampleCount(profile, values); err != nil {
 		return Run{}, err
