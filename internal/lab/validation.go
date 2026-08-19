@@ -3,6 +3,7 @@ package lab
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 func ValidateSampleCount(profile Profile, values []float64) error {
@@ -17,8 +18,8 @@ func NormalizeOperator(name string) string {
 	if normalized == "" {
 		return "unspecified"
 	}
-	if len(normalized) > 80 {
-		return normalized[:80]
+	if utf8.RuneCountInString(normalized) > 80 {
+		return string([]rune(normalized)[:80])
 	}
 	return normalized
 }
