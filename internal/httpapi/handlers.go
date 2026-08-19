@@ -40,7 +40,7 @@ func (s *Server) reports(w http.ResponseWriter, r *http.Request) {
 	}
 	summary, err := s.engine.Summary(profileID)
 	if err != nil {
-		WriteError(w, http.StatusBadRequest, err.Error())
+		WriteError(w, http.StatusNotFound, err.Error())
 		return
 	}
 	WriteJSON(w, http.StatusOK, summary)
