@@ -1,4 +1,4 @@
-# spectral-calibration-lab-7155 Docker 交付说明
+# spectral-calibration-lab__001 Docker 交付说明
 
 ## 项目概览
 - Spectral Calibration Lab is a small HTTP service for research teams that prepare repeatable optical calibration runs. A laboratory operator can inspect supported calibration profil
@@ -20,8 +20,8 @@ go run ./cmd/calibrationd
 ## Docker 构建
 
 ```bash
-./build_benzhi_docker.sh spectral-calibration-lab-7155-benzhi linux/amd64
-docker run --rm -it spectral-calibration-lab-7155-benzhi bash
+./build_benzhi_docker.sh spectral-calibration-lab__001-benzhi linux/amd64
+docker run --rm -it spectral-calibration-lab__001-benzhi bash
 ```
 
 ## 环境

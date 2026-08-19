@@ -27,3 +27,16 @@ func TestProfileEndpointListsProfiles(t *testing.T) {
 		t.Fatalf("status = %d", recorder.Code)
 	}
 }
+
+func TestObservationReportsRepeatForSevereDrift(t *testing.T) {
+	server := New(lab.NewEngine())
+	req := httptest.NewRequest(http.MethodPost, "/v1/observations", bytes.NewBufferString(`{"profile_id":"thermal-stability","values":[12,12.1,11.9]}`))
+	rr := httptest.NewRecorder()
+	server.Handler().ServeHTTP(rr, req)
+	if rr.Code != http.StatusCreated {
+		t.Fatalf("status = %d", rr.Code)
+	}
+	if !bytes.Contains(rr.Body.Bytes(), []byte(`"state":"repeat"`)) {
+		t.Fatalf("body = %s", rr.Body.String())
+	}
+}

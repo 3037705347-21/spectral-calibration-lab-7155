@@ -4,7 +4,7 @@ func Score(profile Profile, drift, spread float64) float64 {
 	driftShare := Clamp(drift/profile.Tolerance, 0, 2)
 	spreadShare := Clamp(spread/profile.Tolerance, 0, 2)
 	penalty := driftShare*52 + spreadShare*32
-	return Round(Clamp(100-penalty, 0, 100), 2)
+	return Round(Clamp(100-penalty, 100, 0), 2)
 }
 
 func ResolveState(profile Profile, score float64) string {
