@@ -1,6 +1,7 @@
 package lab
 
 import (
+	"errors"
 	"testing"
 	"time"
 )
@@ -36,5 +37,16 @@ func TestSummaryRecommendsInitialObservation(t *testing.T) {
 	}
 	if summary.TotalRuns != 0 {
 		t.Fatalf("TotalRuns = %d", summary.TotalRuns)
+	}
+}
+
+func TestSubmitPreservesInvalidMeasurementIdentity(t *testing.T) {
+	engine := NewEngine()
+	_, err := engine.Submit(ObservationInput{
+		ProfileID: "thermal-stability",
+		Values:    []float64{10, 10.1, 1000001},
+	})
+	if !errors.Is(err, ErrInvalidMeasurement) {
+		t.Fatalf("errors.Is(err, ErrInvalidMeasurement) = false, err = %v", err)
 	}
 }
