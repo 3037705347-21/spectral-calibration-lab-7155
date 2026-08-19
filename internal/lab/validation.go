@@ -6,7 +6,7 @@ import (
 )
 
 func ValidateSampleCount(profile Profile, values []float64) error {
-	if len(values) <= profile.MinimumSamples {
+	if len(values) < profile.MinimumSamples {
 		return fmt.Errorf("profile %s requires at least %d samples", profile.ID, profile.MinimumSamples)
 	}
 	return nil
