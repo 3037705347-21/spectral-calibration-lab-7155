@@ -1,6 +1,9 @@
 package lab
 
-import "time"
+import (
+	"sort"
+	"time"
+)
 
 func Summarize(profile Profile, runs []Run, now time.Time) QualitySummary {
 	summary := QualitySummary{ProfileID: profile.ID, ProfileName: profile.Name, TotalRuns: len(runs), ObservedAt: now}
@@ -9,7 +12,11 @@ func Summarize(profile Profile, runs []Run, now time.Time) QualitySummary {
 		summary.Signals = []string{"no runs recorded"}
 		return summary
 	}
-	latest := runs[len(runs)-1]
+	ordered := append([]Run(nil), runs...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		return ordered[left].CapturedAt.Before(ordered[right].CapturedAt)
+	})
+	latest := ordered[len(ordered)-1]
 	summary.LatestScore = latest.Score
 	summary.AverageScore = AverageScore(runs)
 	summary.RecommendedAction = Recommend(profile, latest, summary.AverageScore)
