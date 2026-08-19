@@ -55,7 +55,7 @@ func (e *Engine) History(profileID string) ([]Run, error) {
 	if _, err := e.catalog.Find(profileID); err != nil {
 		return nil, err
 	}
-	return e.ledger.List(profileID), nil
+	return cloneRuns(e.ledger.List(profileID)), nil
 }
 
 func (e *Engine) RunCount() int { return e.ledger.Total() }

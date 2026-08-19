@@ -18,17 +18,16 @@ func (l *Ledger) Append(run Run) Run {
 	defer l.mu.Unlock()
 	l.sequence++
 	run.ID = fmt.Sprintf("run-%04d", l.sequence)
-	l.runs[run.ProfileID] = append(l.runs[run.ProfileID], run)
-	return run
+	stored := cloneRunForStorage(run)
+	l.runs[run.ProfileID] = append(l.runs[run.ProfileID], stored)
+	return cloneRunForHistory(stored)
 }
 
 func (l *Ledger) List(profileID string) []Run {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 	source := l.runs[profileID]
-	result := make([]Run, len(source))
-	copy(result, source)
-	return result
+	return cloneRuns(source)
 }
 
 func (l *Ledger) Total() int {

@@ -34,6 +34,10 @@ type Run struct {
 	Notes      []string  `json:"notes"`
 }
 
+func (r Run) Snapshot() Run {
+	return cloneRun(r)
+}
+
 type QualitySummary struct {
 	ProfileID         string    `json:"profile_id"`
 	ProfileName       string    `json:"profile_name"`
