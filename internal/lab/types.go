@@ -20,6 +20,11 @@ type ObservationInput struct {
 	CapturedBy string    `json:"captured_by"`
 }
 
+type ObservationResult struct {
+	Status string `json:"status"`
+	Run    Run    `json:"run"`
+}
+
 type Run struct {
 	ID         string    `json:"id"`
 	ProfileID  string    `json:"profile_id"`

@@ -8,6 +8,10 @@ func NewEngineWithClock(clock Clock) *Engine {
 
 func (e *Engine) Profiles() []Profile { return e.catalog.List() }
 
+func (e *Engine) ObservationResult(run Run) ObservationResult {
+	return ObservationResult{Status: OutcomeStatus(run.State), Run: run}
+}
+
 func (e *Engine) Submit(input ObservationInput) (Run, error) {
 	profile, err := e.catalog.Find(input.ProfileID)
 	if err != nil {

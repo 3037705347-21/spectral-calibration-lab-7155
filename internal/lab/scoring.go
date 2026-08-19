@@ -17,6 +17,15 @@ func ResolveState(profile Profile, score float64) string {
 	return "repeat"
 }
 
+func OutcomeStatus(state string) string {
+	switch state {
+	case "accepted", "review", "repeat":
+		return state
+	default:
+		return "unknown"
+	}
+}
+
 func IsAccepted(profile Profile, score float64) bool { return score >= profile.AcceptScore }
 func NeedsReview(profile Profile, score float64) bool {
 	return score >= profile.ReviewScore && score < profile.AcceptScore
