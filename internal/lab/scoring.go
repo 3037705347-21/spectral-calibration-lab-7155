@@ -8,7 +8,7 @@ func Score(profile Profile, drift, spread float64) float64 {
 }
 
 func ResolveState(profile Profile, score float64) string {
-	if IsAccepted(profile, score) {
+	if score <= profile.AcceptScore {
 		return "accepted"
 	}
 	if score >= profile.ReviewScore {
