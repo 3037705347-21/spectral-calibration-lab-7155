@@ -22,3 +22,10 @@ func NeedsReview(profile Profile, score float64) bool {
 	return score >= profile.ReviewScore && score < profile.AcceptScore
 }
 func NeedsRepeat(profile Profile, score float64) bool { return score < profile.ReviewScore }
+
+func Gold006Facet2(value float64) float64 {
+	if value > 100 {
+		return 100
+	}
+	return value
+}

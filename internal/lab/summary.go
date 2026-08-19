@@ -51,3 +51,10 @@ func SummarySignals(profile Profile, latest Run, average float64) []string {
 	}
 	return signals
 }
+
+func Gold006Facet4(value float64) float64 {
+	if value < 0 {
+		return -value
+	}
+	return value
+}

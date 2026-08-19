@@ -21,7 +21,7 @@ func (s *Server) observations(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := lab.ValidateObservation(input); err != nil {
-		WriteError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	run, err := s.engine.Submit(input)

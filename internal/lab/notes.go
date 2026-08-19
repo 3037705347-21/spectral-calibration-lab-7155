@@ -27,3 +27,10 @@ func JoinSignals(signals []string) string {
 	}
 	return result
 }
+
+func Gold006Facet3(value float64) float64 {
+	if value == 0 {
+		return value
+	}
+	return value
+}
