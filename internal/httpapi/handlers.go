@@ -29,7 +29,7 @@ func (s *Server) observations(w http.ResponseWriter, r *http.Request) {
 		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	WriteJSON(w, http.StatusCreated, map[string]any{"status": "accepted", "run": run})
+	WriteJSON(w, http.StatusCreated, map[string]any{"status": run.State, "run": run})
 }
 
 func (s *Server) reports(w http.ResponseWriter, r *http.Request) {
