@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "name": "spectral-calibration-lab",
+  "summary": "An offline Go service that evaluates repeatable spectral calibration observations for laboratory teams.",
+  "user_roles": [
+    "laboratory operator",
+    "research engineer",
+    "method steward"
+  ],
+  "entities": [
+    "calibration profile",
+    "observation batch",
+    "calibration run",
+    "quality summary"
+  ],
+  "workflows": [
+    {
+      "id": "inspect-profiles",
+      "name": "查看校准方案",
+      "actor": "laboratory operator",
+      "entry": "GET /v1/profiles",
+      "steps": [
+        "读取内置方案目录",
+        "序列化方案元数据"
+      ],
+      "success": "返回可选校准方案",
+      "failure": "目录为空时返回空数组",
+      "verification": "请求 API 后检查 thermal-stability 方案"
+    },
+    {
+      "id": "submit-observation",
+      "name": "提交观测批次",
+      "actor": "laboratory operator",
+      "entry": "POST /v1/observations",
+      "steps": [
+        "校验方案和读数",
+        "计算评分并保存轮次"
+      ],
+      "success": "返回 accepted 轮次",
+      "failure": "非法读数返回 400",
+      "verification": "提交读数后检查 accepted 状态"
+    },
+    {
+      "id": "review-quality",
+      "name": "查询质量摘要",
+      "actor": "research engineer",
+      "entry": "GET /v1/reports?profile_id=thermal-stability",
+      "steps": [
+        "读取方案与历史轮次",
+        "聚合质量结论"
+      ],
+      "success": "返回 quality summary",
+      "failure": "未知方案返回 404",
+      "verification": "请求摘要后检查 recommended_action"
+    }
+  ],
+  "module_plan": [
+    {
+      "package": "internal/lab",
+      "workflow_ids": [
+        "inspect-profiles",
+        "submit-observation",
+        "review-quality"
+      ]
+    },
+    {
+      "package": "internal/httpapi",
+      "workflow_ids": [
+        "inspect-profiles",
+        "submit-observation",
+        "review-quality"
+      ]
+    },
+    {
+      "package": "cmd/calibrationd",
+      "workflow_ids": [
+        "inspect-profiles",
+        "submit-observation",
+        "review-quality"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "profile catalog API",
+      "workflow_ids": [
+        "inspect-profiles"
+      ]
+    },
+    {
+      "name": "observation intake API",
+      "workflow_ids": [
+        "submit-observation"
+      ]
+    },
+    {
+      "name": "quality summary API",
+      "workflow_ids": [
+        "review-quality"
+      ]
+    }
+  ]
+}
