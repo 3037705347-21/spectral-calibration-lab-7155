@@ -1,0 +1,43 @@
+{
+  "shape": "backend",
+  "service": {
+    "command": "go run ./cmd/calibrationd",
+    "startup_timeout_seconds": 25,
+    "health": {
+      "url": "http://127.0.0.1:18084/healthz",
+      "method": "GET",
+      "status": 200,
+      "contains": "ok"
+    },
+    "api": {
+      "url": "http://127.0.0.1:18084/v1/profiles",
+      "method": "GET",
+      "status": 200,
+      "contains": "thermal-stability"
+    }
+  },
+  "workflow_checks": [
+    {
+      "workflow_id": "inspect-profiles",
+      "url": "http://127.0.0.1:18084/v1/profiles",
+      "method": "GET",
+      "status": 200,
+      "contains": "reference_center"
+    },
+    {
+      "workflow_id": "submit-observation",
+      "url": "http://127.0.0.1:18084/v1/observations",
+      "method": "POST",
+      "body": "{\"profile_id\":\"thermal-stability\",\"values\":[10.0,10.1,9.9,10.0]}",
+      "status": 201,
+      "contains": "accepted"
+    },
+    {
+      "workflow_id": "review-quality",
+      "url": "http://127.0.0.1:18084/v1/reports?profile_id=thermal-stability",
+      "method": "GET",
+      "status": 200,
+      "contains": "recommended_action"
+    }
+  ]
+}
