@@ -1,5 +1,7 @@
 package lab
 
+import "sync"
+
 type TraceabilityRecord struct {
 	RunID             string
 	ProfileID         string
@@ -44,6 +46,7 @@ type TraceabilityRecord struct {
 }
 
 type TraceabilityIndex struct {
+	mu        sync.RWMutex
 	Records   []TraceabilityRecord
 	ByRun     map[string]TraceabilityRecord
 	ByProfile map[string][]TraceabilityRecord
@@ -55,6 +58,8 @@ func NewTraceabilityIndex() *TraceabilityIndex {
 }
 
 func (i *TraceabilityIndex) Add(record TraceabilityRecord) {
+	i.mu.Lock()
+	defer i.mu.Unlock()
 	i.Records = append(i.Records, record)
 	i.ByRun[record.RunID] = record
 	i.ByProfile[record.ProfileID] = append(i.ByProfile[record.ProfileID], record)
@@ -62,11 +67,15 @@ func (i *TraceabilityIndex) Add(record TraceabilityRecord) {
 }
 
 func (i *TraceabilityIndex) FindRun(runID string) (TraceabilityRecord, bool) {
+	i.mu.RLock()
+	defer i.mu.RUnlock()
 	record, ok := i.ByRun[runID]
 	return record, ok
 }
 
 func (i *TraceabilityIndex) ProfileRecords(profileID string) []TraceabilityRecord {
+	i.mu.RLock()
+	defer i.mu.RUnlock()
 	source := i.ByProfile[profileID]
 	result := make([]TraceabilityRecord, len(source))
 	copy(result, source)
